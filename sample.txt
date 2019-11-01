@@ -1,0 +1,5 @@
+@echo on
+set file=XYOSTED STEADY Care Daily%date:~-4%%date:~3,2%%date:~0,2%080000.TXT
+cd "C:\Users\pankajs\AppData\Local\WinSCP\"
+WinSCP.com /console /command "option batch on" "option confirm off" "open sftp://antares:dmiT9G5xwVxg3x9r97gN@sft.mckesson.com:22/" "cd /pub/" "get %file% c:\temp\" "exit"
+exit
