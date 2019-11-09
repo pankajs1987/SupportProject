@@ -1,5 +1,9 @@
 @echo on
-set file=XYOSTED STEADY Care Daily%date:~-4%%date:~3,2%%date:~0,2%080000.TXT
+for /F "usebackq tokens=1,2 delims==" %%i in (`wmic os get LocalDateTime /VALUE 2^>NUL`) do if '.%%i.'=='.LocalDateTime.' set ldt=%%j
+set ldt=%ldt:~0,4%%ldt:~4,2%%ldt:~6,2%
+set file=XYOSTED STEADY Care Daily%ldt%080000.TXT
+echo file
 cd "C:\Users\pankajs\AppData\Local\WinSCP\"
 WinSCP.com /console /command "option batch on" "option confirm off" "open sftp://antares:dmiT9G5xwVxg3x9r97gN@sft.mckesson.com:22/" "cd /pub/" "get %file% c:\temp\" "exit"
+pause
 exit
