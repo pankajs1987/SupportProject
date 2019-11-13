@@ -1,0 +1,51 @@
+@echo on
+
+for /F "usebackq tokens=1,2 delims==" %%i in (`wmic os get LocalDateTime /VALUE 2^>NUL`) do if '.%%i.'=='.LocalDateTime.' set ldt=%%j
+set ldt=%ldt:~0,4%%ldt:~4,2%%ldt:~6,2%
+set file=XYOSTED STEADYCare Daily%ldt%080000.TXT
+cd C:\Data_MGMT\Nitro\Data\
+IF EXIST "C:\Data_MGMT\Nitro\Data\%file%" (
+  ECHO file filename exists Starting with Copying file to remote
+) ELSE (
+  ECHO file filename does not exist
+)
+
+"C:\Users\pankajs\AppData\Local\WinSCP\WinSCP.com" ^
+  /command ^
+ "option batch on" ^
+ "option confirm off" ^
+ "open sftp://sftp_antares-prd-antares:b32RRsF3eRp0xLfkf@cdw-02-sftp-us.veevanitro.com/ -hostkey=""ssh-rsa 2048 36:54:e2:d5:e0:a2:d1:00:70:ea:7c:24:e4:90:64:ff""" ^
+ "cd /Upload/Veeva/Antares" ^
+ "put ""%file%""" ^
+ "close" ^
+set WINSCP_RESULT=%ERRORLEVEL%
+if %WINSCP_RESULT% equ 0 (
+  echo File Processed Successfully.
+) else (
+  echo Error Processing File.
+  pause
+  exit
+)
+ set file=mckessen_sp_steadycare.ctl
+cd C:\ctl
+ 
+ "C:\Users\pankajs\AppData\Local\WinSCP\WinSCP.com" ^
+  /command ^
+ "option batch on" ^
+ "option confirm off" ^
+ "open sftp://logger:logger123@10.91.39.130/ -hostkey=""ssh-dss 2048 xwqhCUBbVdxw9nVSpqPXkh3JQchnCQIktRgZZPGxkh0=""" ^
+ "cd /iwealth/pankaj" ^
+ "put ""%file%""" ^
+ "close" ^
+"exit"
+
+if %WINSCP_RESULT% equ 0 (
+  echo File Processed Successfully.
+) else (
+  echo Error Processing File.
+  pause
+  exit
+)
+pause
+exit /b %WINSCP_RESULT%
+
